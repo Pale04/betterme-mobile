@@ -1,9 +1,14 @@
 package com.betterdevs.betterme.data.shared
 
+import MultimediaService.Multimedia
 import com.betterdevs.betterme.data.dto.AccountCredentialsDTO
 import com.betterdevs.betterme.data.dto.StatisticDTO
 import com.betterdevs.betterme.domain_model.Account
+import com.betterdevs.betterme.domain_model.Post
+import com.betterdevs.betterme.domain_model.PostCategory
+import com.betterdevs.betterme.domain_model.PostStatus
 import com.betterdevs.betterme.domain_model.Statistic
+import com.google.protobuf.Timestamp
 import java.time.Instant
 import java.time.ZoneId
 
@@ -42,3 +47,48 @@ fun Statistic.toDto(): StatisticDTO {
     )
 }
 
+fun Post.toProto(): Multimedia.Post {
+    val category = when (this.category) {
+        PostCategory.EATiNG -> "Alimentacion"
+        PostCategory.HEALTH -> "Salud"
+        PostCategory.MEDICINE -> "Medicina"
+        PostCategory.EXERCISE -> "Ejercicio"
+    }
+    val status = when (this.status) {
+        PostStatus.PUBLISHED -> "Published"
+        PostStatus.REPORTED -> "Reported"
+        PostStatus.DELETED -> "Deleted"
+    }
+    return Multimedia.Post.newBuilder()
+        .setTitle(this.title)
+        .setDescription(this.description)
+        .setCategory(category)
+        .setUserId(this.userId)
+        .setTimeStamp(Timestamp.newBuilder().setSeconds(this.timeStamp.epochSecond))
+        .setStatus(status)
+        .build()
+}
+
+fun Multimedia.Post.toDomain(): Post {
+    val category = when (this.category) {
+        "Alimentacion" -> PostCategory.EATiNG
+        "Salud" -> PostCategory.HEALTH
+        "Medicina" -> PostCategory.MEDICINE
+        else -> PostCategory.EXERCISE
+    }
+    val status = when (this.status) {
+        "Published" -> PostStatus.PUBLISHED
+        "Reported" -> PostStatus.REPORTED
+        else -> PostStatus.DELETED
+    }
+
+    return Post(
+        id = this.id,
+        title = this.title,
+        description = this.description,
+        category = category,
+        userId = this.userId,
+        timeStamp = Instant.ofEpochSecond(this.timeStamp.seconds),
+        status = status
+    )
+}

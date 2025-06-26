@@ -39,7 +39,44 @@ data class CategorySpecification (
 class StatisticsViewModel(val context: Context, val category: StatisticCategory) : ViewModel() {
     private val repository = StatisticsRepository(context)
 
-    val categorySpecification: CategorySpecification
+    val categorySpecification: CategorySpecification = when (category) {
+        StatisticCategory.ARMS -> CategorySpecification(
+            title = context.getString(R.string.statistics_arms_title),
+            inputLabel = context.getString(R.string.statistics_arms_input_label),
+            inputPlaceholder = context.getString(R.string.statistics_arms_input_placeholder),
+            chartYSteps = 5,
+            measurementUnit = "cm."
+        )
+        StatisticCategory.MOOD -> CategorySpecification(
+            title = context.getString(R.string.statistics_mood_title),
+            inputLabel = context.getString(R.string.statistics_mood_input_label),
+            chartYSteps = 5
+        )
+        StatisticCategory.SLEEP_HOURS -> CategorySpecification(
+            title = context.getString(R.string.statistics_sleeping_time_title),
+            inputLabel = context.getString(R.string.statistics_sleeping_time_input_label),
+            inputPlaceholder = context.getString(R.string.statistics_sleeping_time_input_placeholder),
+            measurementUnit = "hr."
+        )
+        StatisticCategory.WAIST -> CategorySpecification(
+            title = context.getString(R.string.statistics_waist_measure_title),
+            inputLabel = context.getString(R.string.statistics_waist_input_label),
+            inputPlaceholder = context.getString(R.string.statistics_waist_input_placeholder),
+            measurementUnit = "cm."
+        )
+        StatisticCategory.WEIGHT -> CategorySpecification(
+            title = context.getString(R.string.statistics_weight_measure_title),
+            inputLabel = context.getString(R.string.statistics_weight_input_label),
+            inputPlaceholder = context.getString(R.string.statistics_weight_input_placeholder),
+            measurementUnit = "kg."
+        )
+        StatisticCategory.WATER_INTAKE -> CategorySpecification(
+            title = context.getString(R.string.statistics_water_intake_title),
+            inputLabel = context.getString(R.string.statistics_water_intake_input_label),
+            inputPlaceholder = context.getString(R.string.statistics_water_intake_input_placeholder),
+            measurementUnit = "vasos"
+        )
+    }
 
     private val _state = mutableStateOf(StatisticsState())
     val state: State<StatisticsState> = _state
@@ -49,47 +86,6 @@ class StatisticsViewModel(val context: Context, val category: StatisticCategory)
 
     private val _snackbarMessage = MutableSharedFlow<String>()
     val snackbarMessage: SharedFlow<String> = _snackbarMessage
-
-    init {
-        categorySpecification = when (category) {
-            StatisticCategory.ARMS -> CategorySpecification(
-                title = context.getString(R.string.statistics_arms_title),
-                inputLabel = context.getString(R.string.statistics_arms_input_label),
-                inputPlaceholder = context.getString(R.string.statistics_arms_input_placeholder),
-                chartYSteps = 5,
-                measurementUnit = "cm."
-            )
-            StatisticCategory.MOOD -> CategorySpecification(
-                title = context.getString(R.string.statistics_mood_title),
-                inputLabel = context.getString(R.string.statistics_mood_input_label),
-                chartYSteps = 5
-            )
-            StatisticCategory.SLEEP_HOURS -> CategorySpecification(
-                title = context.getString(R.string.statistics_sleeping_time_title),
-                inputLabel = context.getString(R.string.statistics_sleeping_time_input_label),
-                inputPlaceholder = context.getString(R.string.statistics_sleeping_time_input_placeholder),
-                measurementUnit = "hr."
-            )
-            StatisticCategory.WAIST -> CategorySpecification(
-                title = context.getString(R.string.statistics_waist_measure_title),
-                inputLabel = context.getString(R.string.statistics_waist_input_label),
-                inputPlaceholder = context.getString(R.string.statistics_waist_input_placeholder),
-                measurementUnit = "cm."
-            )
-            StatisticCategory.WEIGHT -> CategorySpecification(
-                title = context.getString(R.string.statistics_weight_measure_title),
-                inputLabel = context.getString(R.string.statistics_weight_input_label),
-                inputPlaceholder = context.getString(R.string.statistics_weight_input_placeholder),
-                measurementUnit = "kg."
-            )
-            StatisticCategory.WATER_INTAKE -> CategorySpecification(
-                title = context.getString(R.string.statistics_water_intake_title),
-                inputLabel = context.getString(R.string.statistics_water_intake_input_label),
-                inputPlaceholder = context.getString(R.string.statistics_water_intake_input_placeholder),
-                measurementUnit = "vasos"
-            )
-        }
-    }
 
     fun onMeasureInputChange(measure: String) {
         val regex = Regex("^\\d{0,3}(\\.\\d?)?$")

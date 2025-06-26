@@ -35,10 +35,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.betterdevs.betterme.R
-import com.betterdevs.betterme.ui.navigation.Destinations
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -124,7 +121,7 @@ fun LoginScreen(
                 }
 
                 Column (
-                    modifier = Modifier.padding(20.dp),
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Button(

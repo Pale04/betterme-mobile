@@ -10,6 +10,7 @@ object Destinations {
         Login,
         CreateAccount,
         Posts,
+        PostCreation,
         StatisticSelection,
         Statistics,
         Profile
@@ -27,6 +28,11 @@ object Destinations {
 
     object Posts : Destination {
         override val path = "Posts"
+        override val showBottomBar = true
+    }
+
+    object PostCreation : Destination {
+        override val path = "Posts/PostCreation"
         override val showBottomBar = true
     }
 

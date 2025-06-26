@@ -12,6 +12,8 @@ import com.betterdevs.betterme.ui.create_account.CreateAccountScreen
 import com.betterdevs.betterme.ui.login.LoginScreen
 import com.betterdevs.betterme.ui.statistics.StatisticSelectionScreen
 import com.betterdevs.betterme.ui.statistics.StatisticsScreen
+import com.betterdevs.betterme.ui.posts.PostsScreen
+import com.betterdevs.betterme.ui.posts.post_creation.PostCreationScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -42,10 +44,17 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
             )
         }
         composable(Destinations.Posts.path) {
-            /*PostsScreen(
-                navController = navController,
+            PostsScreen(
+                onCreatePostClick = {
+                    navController.navigate(Destinations.PostCreation.path)
+                },
                 modifier = modifier
-            )*/
+            )
+        }
+        composable(Destinations.PostCreation.path) {
+            PostCreationScreen(
+                modifier = modifier
+            )
         }
         composable(Destinations.StatisticSelection.path) {
             StatisticSelectionScreen(

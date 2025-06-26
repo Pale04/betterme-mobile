@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
+    id("com.google.protobuf") version "0.9.5"
 }
 
 android {
@@ -28,6 +28,7 @@ android {
             buildConfigField("String", "AUTHENTICATION_API_BASE_URL", "\"http://192.168.1.67:8080/\"")
             buildConfigField("String", "HEALTH_STATS_API_BASE_URL", "\"http://192.168.1.67:5134/\"")
             buildConfigField("String", "USERS_API_BASE_URL", "\"http://192.168.1.67:6969/\"")
+            buildConfigField("String", "MULTIMEDIA_API_BASE_URL", "\"http:/192.168.1.67:6979/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -38,6 +39,8 @@ android {
             buildConfigField("String", "AUTHENTICATION_API_BASE_URL", "\"http://192.168.1.67:6968/\"")
             buildConfigField("String", "HEALTH_STATS_API_BASE_URL", "\"http://192.168.1.67:5134/\"")
             buildConfigField("String", "USERS_API_BASE_URL", "\"http://192.168.1.67:6969/\"")
+            buildConfigField("String", "MULTIMEDIA_API_IP", "\"192.168.1.67\"")
+            buildConfigField("int", "MULTIMEDIA_API_PORT", "6979")
         }
     }
 
@@ -54,7 +57,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,6 +66,22 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.coil.compose)
+
+
+    implementation(libs.grpc.stub)
+    implementation(libs.grpc.protobuf.lite)
+    implementation(libs.grpc.kotlin.stub)
+    implementation(libs.protobuf.kotlin.lite)
+
+    implementation(libs.protoc)
+    implementation(libs.protoc.gen.grpc.kotlin)
+    implementation(libs.protoc.gen.grpc.java)
+
+
+    implementation(libs.grpc.okhttp)
+    implementation(libs.javax.annotation.api)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,9 +90,46 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("com.squareup.retrofit2:retrofit:3.0.0")
-    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
 
-    implementation("co.yml:ycharts:2.1.0")
+    implementation(libs.ycharts)
+}
+
+protobuf {
+    protoc {
+        artifact = libs.protoc.asProvider().get().toString()
+    }
+    plugins {
+        create("java") {
+            artifact = libs.protoc.gen.grpc.java.get().toString()
+        }
+        create("grpc") {
+            artifact = libs.protoc.gen.grpc.java.get().toString()
+        }
+        create("grpckt") {
+            artifact = libs.protoc.gen.grpc.kotlin.get().toString() + ":jdk8@jar"
+        }
+    }
+    generateProtoTasks {
+        all().forEach {
+            it.plugins {
+                create("java") {
+                    option("lite")
+                }
+                create("grpc") {
+                    option("lite")
+                }
+                create("grpckt") {
+                    option("lite")
+                }
+            }
+            it.builtins {
+                create("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }

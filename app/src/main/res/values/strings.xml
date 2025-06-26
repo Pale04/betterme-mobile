@@ -55,4 +55,18 @@
     <string name="general_no_internet_error">Conectate a una red para continuar</string>
     <string name="statistics_todays_tracking_done">Ya has realizado el registro de hoy</string>
     <string name="login_maderator_account_error">Si eres moderador, accede a tu cuenta desde la aplicación de escritorio.</string>
+    <string name="posts_create_post_button">Publicar</string>
+    <string name="post_creation_title_input_label">Título</string>
+    <string name="post_creation_description_input_label">Descripción</string>
+    <string name="post_creation_title_error">El título no puede estar vacío</string>
+    <string name="post_creation_save_button">Publicar</string>
+    <string name="post_eating_category">Alimentación</string>
+    <string name="post_exercise_category">Ejercicio</string>
+    <string name="post_health_category">Salud</string>
+    <string name="post_medicine_category">Medicina</string>
+    <string name="post_creation_category_label">Categoría del contenido</string>
+    <string name="post_creation_title">Crear publicación</string>
+    <string name="post_creation_category_error">Debes elegir una categoría</string>
+    <string name="post_creation_select_multimedia">Agregar multimedia</string>
+    <string name="post_creation_description_error">Debes añadir una descripción</string>
 </resources>
