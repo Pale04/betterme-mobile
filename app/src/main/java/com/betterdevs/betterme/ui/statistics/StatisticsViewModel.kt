@@ -143,7 +143,7 @@ class StatisticsViewModel(val context: Context, val category: StatisticCategory)
                 }
                 else {
                     val lastStatistic = response.data.last()
-                    if (lastStatistic.date.compareTo(LocalDate.now()) == 0) {
+                    if (lastStatistic.date.compareTo(LocalDate.now().atStartOfDay().toLocalDate()) == 0) {
                         when (category) {
                             StatisticCategory.ARMS -> categorySpecification.todayTrackingDone = lastStatistic.arms != null
                             StatisticCategory.MOOD -> categorySpecification.todayTrackingDone = lastStatistic.mood != null
@@ -173,8 +173,8 @@ class StatisticsViewModel(val context: Context, val category: StatisticCategory)
     private fun convertStatisticToPoint(statistics: List<Statistic>): List<Point> {
         val points = mutableListOf<Point>()
 
+        val actualDate = LocalDate.now()
         for (statistic in statistics) {
-            val x = LocalDate.now().toEpochDay() - statistic.date.toEpochDay()
             val y = when (this.category) {
                 StatisticCategory.ARMS -> statistic.arms
                 StatisticCategory.MOOD -> statistic.mood
@@ -183,7 +183,11 @@ class StatisticsViewModel(val context: Context, val category: StatisticCategory)
                 StatisticCategory.WEIGHT -> statistic.weight
                 StatisticCategory.WATER_INTAKE -> statistic.waterIntake
             }
-            points.add(Point(x.toFloat(), y?.toFloat() ?: 0.0f))
+            if (y != null) {
+                val x = actualDate.minusDays(actualDate.toEpochDay() - statistic.date.toEpochDay()).toEpochDay()
+                points.add(Point(x.toFloat(), y?.toFloat() ?: 0.0f))
+            }
+
         }
 
         return points

@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.extensions.formatToSinglePrecision
 import co.yml.charts.common.model.Point
@@ -82,7 +83,9 @@ fun StatisticsScreen(
         modifier = modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp).fillMaxSize(),
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -145,7 +148,7 @@ fun LineChart(points: List<Point>, measurementUnit: String, ySteps: Int, modifie
         .backgroundColor(Color.Transparent)
         .topPadding(16.dp)
         .steps(points.size - 1)
-        .labelData { i -> if(i > 0) generateChartDateLabel(points[points.size - 1 - i].x.toLong()) else "" }
+        .labelData { i -> if(i > 0) generateChartDateLabel(points[i].x.toLong()) else "" }
         .labelAndAxisLinePadding(15.dp)
         .axisLineColor(Color(0xFF468585))
         .axisLabelColor(Color(0xFF468585))
@@ -187,7 +190,9 @@ fun LineChart(points: List<Point>, measurementUnit: String, ySteps: Int, modifie
                             )
                         )
                     ),
-                    SelectionHighlightPopUp()
+                    SelectionHighlightPopUp(
+                        popUpLabel = { x, y -> "${generateChartDateLabel(x.toLong())}-${y}"}
+                    )
                 )
             )
         ),
@@ -207,9 +212,9 @@ fun LineChart(points: List<Point>, measurementUnit: String, ySteps: Int, modifie
 
 }
 
-private fun generateChartDateLabel(daysAgo: Long): String {
+private fun generateChartDateLabel(epochDay: Long): String {
     val format = DateTimeFormatter.ofPattern("dd/MM")
-    return LocalDate.now().minusDays(daysAgo).format(format)
+    return LocalDate.ofEpochDay(epochDay).format(format)
 }
 
 @Preview(showBackground = true, showSystemUi = true)
