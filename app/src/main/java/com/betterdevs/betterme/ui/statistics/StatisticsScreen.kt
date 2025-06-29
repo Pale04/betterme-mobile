@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.extensions.formatToSinglePrecision
 import co.yml.charts.common.model.Point
@@ -143,8 +141,21 @@ fun StatisticsScreen(
 
 @Composable
 fun LineChart(points: List<Point>, measurementUnit: String, ySteps: Int, modifier: Modifier = Modifier) {
+    if (points.isEmpty()) {
+        Column(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Aún no registras ningún dato",
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        return
+    }
+
     val xAxisData = AxisData.Builder()
-        .axisStepSize((340/(points.size)).dp)
+        .axisStepSize(( 340/(if (points.isNotEmpty()) points.size else 1) ).dp)
         .backgroundColor(Color.Transparent)
         .topPadding(16.dp)
         .steps(points.size - 1)
@@ -207,7 +218,6 @@ fun LineChart(points: List<Point>, measurementUnit: String, ySteps: Int, modifie
             modifier = Modifier,
             lineChartData = data
         )
-        Text(text = "Fecha")
     }
 
 }

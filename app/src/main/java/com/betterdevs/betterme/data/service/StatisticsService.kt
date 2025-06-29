@@ -16,6 +16,7 @@ import java.time.Instant
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonSerializer
 import com.google.gson.JsonPrimitive
+import okhttp3.HttpUrl
 import retrofit2.http.POST
 
 interface StatisticsService {
@@ -34,8 +35,13 @@ interface StatisticsService {
                 .addInterceptor(AuthInterceptor(context))
                 .build()
 
+            val baseUrl: HttpUrl = HttpUrl.Builder()
+                .scheme("http")
+                .host(BuildConfig.SERVER_BASE_IP)
+                .port(BuildConfig.HEALTH_STATS_API_PORT)
+                .build()
             return Retrofit.Builder()
-                .baseUrl(BuildConfig.HEALTH_STATS_API_BASE_URL)
+                .baseUrl(baseUrl)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(
                     GsonBuilder()

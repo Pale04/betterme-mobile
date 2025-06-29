@@ -18,16 +18,16 @@ class StatisticsDataSource(val context: Context) {
         try {
             response = statisticsService.getStatistics(userId)
         } catch (error: UnknownHostException) {
-            println(error.stackTrace)
+            error.printStackTrace()
             return Response(false, context.getString(R.string.general_no_internet_error))
         } catch (error: SocketTimeoutException) {
-            println(error.stackTrace)
+            error.printStackTrace()
             return Response(false, context.getString(R.string.general_no_conection_error_text))
         } catch (error: ConnectException) {
-            println(error.stackTrace)
+            error.printStackTrace()
             return Response(false, context.getString(R.string.general_no_conection_error_text))
         } catch (error: Exception) {
-            println(error.stackTrace)
+            error.printStackTrace()
             return Response(false, context.getString(R.string.general_server_error))
         }
 
@@ -44,16 +44,16 @@ class StatisticsDataSource(val context: Context) {
         try {
             response = statisticsService.saveStatistic(statistic)
         } catch (error: UnknownHostException) {
-            println(error.stackTrace)
+            error.printStackTrace()
             return Response(false, context.getString(R.string.general_no_internet_error))
         } catch (error: SocketTimeoutException) {
-            println(error.stackTrace)
+            error.printStackTrace()
             return Response(false, context.getString(R.string.general_no_conection_error_text))
         } catch (error: ConnectException) {
-            println(error.stackTrace)
+            error.printStackTrace()
             return Response(false, context.getString(R.string.general_no_conection_error_text))
         } catch (error: Exception) {
-            println(error.stackTrace)
+            error.printStackTrace()
             return Response(false, context.getString(R.string.general_server_error))
         }
 

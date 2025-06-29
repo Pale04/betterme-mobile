@@ -1,12 +1,12 @@
 package com.betterdevs.betterme.ui.posts.post_creation
 
-import android.content.Context
+import android.app.Application
 import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.betterdevs.betterme.data.repository.MultimediaRepository
+import com.betterdevs.betterme.data.repository.PostRepository
 import com.betterdevs.betterme.domain_model.Post
 import com.betterdevs.betterme.domain_model.PostCategory
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,8 +29,10 @@ data class PostCreationState (
     val error: String? = null,
 )
 
-class PostCreationViewModel(val context: Context) : ViewModel() {
-    private val multimediaRepository = MultimediaRepository(context)
+class PostCreationViewModel(application: Application) : AndroidViewModel(application) {
+    private val context = application.applicationContext
+
+    private val postRepository = PostRepository(context)
 
     private val _state = mutableStateOf(PostCreationState())
     val state: State<PostCreationState> = _state
@@ -56,7 +58,7 @@ class PostCreationViewModel(val context: Context) : ViewModel() {
 
     fun onCategorySelected(category: PostCategory) {
         _state.value = _state.value.copy(
-            isEatingCategorySelected = category == PostCategory.EATiNG,
+            isEatingCategorySelected = category == PostCategory.EATING,
             isExerciseCategorySelected = category == PostCategory.EXERCISE,
             isMedicineCategorySelected = category == PostCategory.MEDICINE,
             isHealthCategorySelected = category == PostCategory.HEALTH,
@@ -70,7 +72,7 @@ class PostCreationViewModel(val context: Context) : ViewModel() {
         )
     }
 
-    fun validateFields(): Boolean {
+    private fun validateFields(): Boolean {
         val isTitleValid = _state.value.title.isNotBlank()
         val isDescriptionValid = _state.value.description.isNotBlank()
         val isCategoryValid = _state.value.isEatingCategorySelected
@@ -96,7 +98,7 @@ class PostCreationViewModel(val context: Context) : ViewModel() {
             )
 
             val category = when {
-                _state.value.isEatingCategorySelected -> PostCategory.EATiNG
+                _state.value.isEatingCategorySelected -> PostCategory.EATING
                 _state.value.isExerciseCategorySelected -> PostCategory.EXERCISE
                 _state.value.isMedicineCategorySelected -> PostCategory.MEDICINE
                 else -> PostCategory.HEALTH
@@ -107,7 +109,7 @@ class PostCreationViewModel(val context: Context) : ViewModel() {
                 category = category,
                 multimediaUri = _state.value.multimediaUri
             )
-            val response = multimediaRepository.createPost(post)
+            val response = postRepository.createPost(post)
 
             if (response.success) {
                _state.value = _state.value.copy(
@@ -119,7 +121,7 @@ class PostCreationViewModel(val context: Context) : ViewModel() {
                    isHealthCategorySelected = false,
                    multimediaUri = null
                )
-               _snackbarMessage.emit("Post creado correctamente")
+               _snackbarMessage.emit(response.message)
             } else {
                 _snackbarMessage.emit(response.message)
             }

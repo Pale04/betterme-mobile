@@ -19,11 +19,11 @@ import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.betterdevs.betterme.R
@@ -55,7 +56,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun PostCreationScreen(
     modifier: Modifier = Modifier,
-    viewModel: PostCreationViewModel = PostCreationViewModel(LocalContext.current)
+    viewModel: PostCreationViewModel = viewModel()
 ) {
     val state by viewModel.state
     val snackbarHostState = remember { SnackbarHostState() }
@@ -109,12 +110,12 @@ fun PostCreationScreen(
                 )
                 Row (modifier = Modifier.fillMaxWidth()) {
                     FilterChip(
-                        onClick = { viewModel.onCategorySelected(PostCategory.EATiNG) },
+                        onClick = { viewModel.onCategorySelected(PostCategory.EATING) },
                         label = { Text(
                             text = stringResource(R.string.post_eating_category),
                             textAlign = TextAlign.Center,
                             modifier = Modifier.weight(1f)
-                        ) },
+                        )},
                         selected = state.isEatingCategorySelected,
                         leadingIcon = if (state.isEatingCategorySelected) {
                             {
@@ -253,12 +254,15 @@ fun PostCreationScreen(
                                 .build()
                         ),
                         contentDescription = "Multimedia selected",
-                        modifier = Modifier.height(500.dp),
-                        contentScale = ContentScale.FillHeight
+                        modifier = Modifier
+                            .height(500.dp)
+                            .align(Alignment.Center),
+                        contentScale = ContentScale.Fit
                     )
-                    OutlinedIconButton (
-                        onClick = { viewModel.onImageSelected(null)},
-                        modifier = Modifier.align(Alignment.TopEnd)
+                    FilledTonalIconButton (
+                        onClick = { viewModel.onImageSelected(null) },
+                        modifier = Modifier.align(Alignment.TopEnd),
+
                     ){
                         Icon(
                             imageVector = Icons.Outlined.Clear,

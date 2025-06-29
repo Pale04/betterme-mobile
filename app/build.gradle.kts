@@ -25,10 +25,7 @@ android {
 
     buildTypes {
         getByName("release") {
-            buildConfigField("String", "AUTHENTICATION_API_BASE_URL", "\"http://192.168.1.67:8080/\"")
-            buildConfigField("String", "HEALTH_STATS_API_BASE_URL", "\"http://192.168.1.67:5134/\"")
-            buildConfigField("String", "USERS_API_BASE_URL", "\"http://192.168.1.67:6969/\"")
-            buildConfigField("String", "MULTIMEDIA_API_BASE_URL", "\"http:/192.168.1.67:6979/\"")
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -36,10 +33,10 @@ android {
             )
         }
         getByName("debug") {
-            buildConfigField("String", "AUTHENTICATION_API_BASE_URL", "\"http://192.168.1.67:6968/\"")
-            buildConfigField("String", "HEALTH_STATS_API_BASE_URL", "\"http://192.168.1.67:5134/\"")
-            buildConfigField("String", "USERS_API_BASE_URL", "\"http://192.168.1.67:6969/\"")
-            buildConfigField("String", "MULTIMEDIA_API_IP", "\"192.168.1.67\"")
+            buildConfigField("String", "SERVER_BASE_IP","\"192.168.1.67\"")
+            buildConfigField("int", "AUTHENTICATION_API_PORT", "6968")
+            buildConfigField("int", "HEALTH_STATS_API_PORT", "6973")
+            buildConfigField("int", "USERS_API_PORT", "6969")
             buildConfigField("int", "MULTIMEDIA_API_PORT", "6979")
         }
     }

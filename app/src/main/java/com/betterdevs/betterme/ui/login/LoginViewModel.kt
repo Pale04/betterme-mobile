@@ -1,8 +1,10 @@
 package com.betterdevs.betterme.ui.login
 
+import android.app.Application
 import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.betterdevs.betterme.R
@@ -16,11 +18,12 @@ import kotlinx.coroutines.launch
 data class LoginState (
     val username: String = "",
     val password: String = "",
-    val isLoading: Boolean = false,
-    val error: String? = null,
+    val isLoading: Boolean = false
 )
 
-class LoginViewModel(val context: Context) : ViewModel() {
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
+    private val context = application.applicationContext
+
     private val repository = LoginRepository(context)
 
     private val _state = mutableStateOf(LoginState())

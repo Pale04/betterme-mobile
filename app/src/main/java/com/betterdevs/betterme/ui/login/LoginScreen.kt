@@ -35,6 +35,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.betterdevs.betterme.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -45,7 +46,7 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onCreateAccountClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = LoginViewModel(LocalContext.current)
+    viewModel: LoginViewModel = viewModel()
 ) {
     val state by viewModel.state
 

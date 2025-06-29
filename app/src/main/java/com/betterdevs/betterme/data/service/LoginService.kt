@@ -10,6 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
 import com.betterdevs.betterme.BuildConfig
+import okhttp3.HttpUrl
 
 interface LoginService {
     @POST("api/authentication/login")
@@ -23,8 +24,13 @@ interface LoginService {
                 })
                 .build()
 
+            val baseUrl: HttpUrl = HttpUrl.Builder()
+                .scheme("http")
+                .host(BuildConfig.SERVER_BASE_IP)
+                .port(BuildConfig.AUTHENTICATION_API_PORT)
+                .build()
             return Retrofit.Builder()
-                .baseUrl(BuildConfig.AUTHENTICATION_API_BASE_URL)
+                .baseUrl(baseUrl)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

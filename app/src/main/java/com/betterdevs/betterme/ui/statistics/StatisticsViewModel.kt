@@ -22,7 +22,7 @@ data class StatisticsState (
 )
 
 data class ChartState (
-    val points: List<Point> = listOf(Point(0f,0f)),
+    val points: List<Point> = listOf(),
     val isLoading: Boolean = false,
     val error: Boolean = false,
 )
@@ -56,25 +56,29 @@ class StatisticsViewModel(val context: Context, val category: StatisticCategory)
             title = context.getString(R.string.statistics_sleeping_time_title),
             inputLabel = context.getString(R.string.statistics_sleeping_time_input_label),
             inputPlaceholder = context.getString(R.string.statistics_sleeping_time_input_placeholder),
-            measurementUnit = "hr."
+            measurementUnit = "hr.",
+            chartYSteps = 10
         )
         StatisticCategory.WAIST -> CategorySpecification(
             title = context.getString(R.string.statistics_waist_measure_title),
             inputLabel = context.getString(R.string.statistics_waist_input_label),
             inputPlaceholder = context.getString(R.string.statistics_waist_input_placeholder),
-            measurementUnit = "cm."
+            measurementUnit = "cm.",
+            chartYSteps = 10
         )
         StatisticCategory.WEIGHT -> CategorySpecification(
             title = context.getString(R.string.statistics_weight_measure_title),
             inputLabel = context.getString(R.string.statistics_weight_input_label),
             inputPlaceholder = context.getString(R.string.statistics_weight_input_placeholder),
-            measurementUnit = "kg."
+            measurementUnit = "kg.",
+            chartYSteps = 10
         )
         StatisticCategory.WATER_INTAKE -> CategorySpecification(
             title = context.getString(R.string.statistics_water_intake_title),
             inputLabel = context.getString(R.string.statistics_water_intake_input_label),
             inputPlaceholder = context.getString(R.string.statistics_water_intake_input_placeholder),
-            measurementUnit = "vasos"
+            measurementUnit = "vasos",
+            chartYSteps = 10
         )
     }
 
@@ -134,10 +138,7 @@ class StatisticsViewModel(val context: Context, val category: StatisticCategory)
 
             val response = repository.getStatistics()
             if (response.success) {
-                if (response.data.isNullOrEmpty()) {
-                    _snackbarMessage.emit("Aún no registras ningún dato")
-                }
-                else {
+                if (!response.data.isNullOrEmpty()) {
                     val lastStatistic = response.data.last()
                     if (lastStatistic.date.compareTo(LocalDate.now().atStartOfDay().toLocalDate()) == 0) {
                         when (category) {
@@ -181,7 +182,7 @@ class StatisticsViewModel(val context: Context, val category: StatisticCategory)
             }
             if (y != null) {
                 val x = actualDate.minusDays(actualDate.toEpochDay() - statistic.date.toEpochDay()).toEpochDay()
-                points.add(Point(x.toFloat(), y?.toFloat() ?: 0.0f))
+                points.add(Point(x.toFloat(), y.toFloat()))
             }
 
         }

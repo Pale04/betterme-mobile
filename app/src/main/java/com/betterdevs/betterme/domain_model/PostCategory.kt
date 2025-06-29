@@ -1,7 +1,7 @@
 package com.betterdevs.betterme.domain_model
 
 enum class PostCategory {
-    EATiNG,
+    EATING,
     EXERCISE,
     MEDICINE,
     HEALTH

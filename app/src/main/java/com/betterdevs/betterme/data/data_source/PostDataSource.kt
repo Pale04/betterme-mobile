@@ -2,10 +2,10 @@ package com.betterdevs.betterme.data.data_source
 
 import MultimediaService.Multimedia.FileChunk
 import MultimediaService.Multimedia.Post
-import MultimediaService.Multimedia.PostInfo
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
+import com.betterdevs.betterme.R
 import com.betterdevs.betterme.data.service.MultimediaService
 import com.betterdevs.betterme.domain_model.Response
 import com.google.protobuf.ByteString
@@ -16,55 +16,57 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
-import java.io.IOException
 import java.io.InputStream
 
-class MultimediaDataSource(val context: Context) {
+class PostDataSource(val context: Context) {
     private val multimediaService = MultimediaService()
 
     suspend fun createPost(post: Post, multimediaUri: Uri? = null): Response<Post> {
-        val response: Post
+        val response: Response<Post>
 
-        try {
-            response = multimediaService.createPost(post)
-            if (multimediaUri != null) {
-                uploadPostMultimedia(response.id, multimediaUri)
+        if (multimediaUri == null) {
+            val grpcResponse: Post
+            try {
+                grpcResponse = multimediaService.createPost(post)
+            } catch (error: StatusException) {
+                error.printStackTrace()
+                return Response(false, context.getString(R.string.post_creation_create_post_error))
             }
-        } catch (error: StatusException) {
-            error.printStackTrace()
-            return Response(false, "Error al crear el post")
-        } catch (error: IOException) {
-            error.printStackTrace()
-            return Response(false, "No es posible acceder al archivo adjunto")
+            response = Response(true, context.getString(R.string.post_creation_created_successfully), grpcResponse)
+        } else {
+            response = createPostWithMultimedia(post, multimediaUri)
         }
 
-        return Response(true, "Post created successfully", response)
+        return response
     }
 
-    private suspend fun uploadPostMultimedia(postId: String, multimediaUri: Uri): Response<PostInfo> {
+    private suspend fun createPostWithMultimedia(post: Post, multimediaUri: Uri): Response<Post> {
         val fileExtension = getFileExtension(multimediaUri)
-        if (fileExtension.isEmpty()) return Response(false, "No es posible acceder al archivo adjunto")
+        if (fileExtension.isEmpty()) return Response(false, context.getString(R.string.post_creation_multimedia_access_error))
 
-        val response: PostInfo
+        val createdPost: Post
         var inputStream: InputStream? = null
         try {
             inputStream = context.contentResolver.openInputStream(multimediaUri)
-            if (inputStream == null) return Response(false, "No es posible acceder al archivo adjunto")
-            val flow: Flow<FileChunk> = generateMultimediaChunks(inputStream, postId, fileExtension)
-            response = multimediaService.uploadPostMultimedia(flow)
+            if (inputStream == null) {
+                return Response(false, context.getString(R.string.post_creation_multimedia_access_error))
+            }
+            createdPost = multimediaService.createPost(post)
+            val flow: Flow<FileChunk> = generateMultimediaChunks(inputStream, createdPost.id, fileExtension)
+            multimediaService.uploadPostMultimedia(flow)
         } catch (error: FileNotFoundException) {
             error.printStackTrace()
-            return Response(false, "No es posible acceder al archivo adjunto")
+            return Response(false, context.getString(R.string.post_creation_multimedia_access_error))
         } catch (error: StatusException) {
             error.printStackTrace()
-            return Response(false, "Error al subir la multimedia")
+            return Response(false, context.getString(R.string.post_creation_create_post_error))
         } finally {
             withContext(Dispatchers.IO) {
                 inputStream?.close()
             }
         }
 
-        return Response(true, "Multimedia uploaded successfully", response)
+        return Response(true, context.getString(R.string.post_creation_created_successfully), createdPost)
     }
 
     private fun generateMultimediaChunks(inputStream: InputStream, postId: String, fileExtension: String): Flow<FileChunk> = flow {
@@ -72,8 +74,7 @@ class MultimediaDataSource(val context: Context) {
         var length: Int
         while (inputStream.read(buffer).also { length = it } > 0) {
             emit(
-                FileChunk
-                    .newBuilder()
+                FileChunk.newBuilder()
                     .setChunk(ByteString.copyFrom(buffer, 0, length))
                     .setExt(fileExtension)
                     .setResourceId(postId)

@@ -69,4 +69,16 @@
     <string name="post_creation_category_error">Debes elegir una categoría</string>
     <string name="post_creation_select_multimedia">Agregar multimedia</string>
     <string name="post_creation_description_error">Debes añadir una descripción</string>
+    <string name="post_creation_create_post_error">Ocurrió un erro al intentar publicar el contenido. Intentelo más tarde</string>
+    <string name="post_creation_created_successfully">La publicación se ha creado correctamente</string>
+    <string name="post_creation_multimedia_access_error">No es posible acceder al archivo adjunto</string>
+    <string name="create_account_empty_name_error">El nombre es obligatorio</string>
+    <string name="create_account_email_error">El correo no es válido</string>
+    <string name="create_account_email_placeholder">correo@email.com</string>
+    <string name="create_account_username_wrong">El nombre de usuario es obligatorio</string>
+    <string name="create_account_birthday_wrong">Es necesario que indiques tu fecha de nacimiento</string>
+    <string name="create_account_password_instruction">La contraseña debe contener 8 caracteres con al menos: una letra minúscula, una letra mayúscula, un dígito y un caracter especial</string>
+    <string name="create_account_confirm_password_error">La contraseña debe coincidir</string>
+    <string name="create_account_created_successfully">Se ha creado la cuenta correctamente.</string>
+    <string name="general_expired_token_error">Vuelva a iniciar sesión para continuar</string>
 </resources>

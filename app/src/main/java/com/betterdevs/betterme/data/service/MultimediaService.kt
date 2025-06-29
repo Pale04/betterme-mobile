@@ -15,8 +15,12 @@ interface IMultimediaService {
 }
 
 class MultimediaService : IMultimediaService {
-    private val channel: ManagedChannel = ManagedChannelBuilder.forAddress(BuildConfig.MULTIMEDIA_API_IP, BuildConfig.MULTIMEDIA_API_PORT).usePlaintext().build()
-    private val stub = MultimediaServiceCoroutineStub(channel)
+    private val channel: ManagedChannel = ManagedChannelBuilder
+        .forAddress(BuildConfig.SERVER_BASE_IP, BuildConfig.MULTIMEDIA_API_PORT)
+        .usePlaintext()
+        .build()
+
+    private val stub = MultimediaServiceCoroutineStub(channel).withWaitForReady()
 
     override suspend fun createPost(post: Post): Post = stub.createPost(post)
 
