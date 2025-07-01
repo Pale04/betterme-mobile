@@ -4,6 +4,7 @@ import MultimediaService.Multimedia
 import com.betterdevs.betterme.data.dto.AccountCredentialsDTO
 import com.betterdevs.betterme.data.dto.CreateAccountBodyDTO
 import com.betterdevs.betterme.data.dto.StatisticDTO
+import com.betterdevs.betterme.data.dto.UpdateUserBodyDTO
 import com.betterdevs.betterme.data.dto.UserDTO
 import com.betterdevs.betterme.domain_model.Account
 import com.betterdevs.betterme.domain_model.Post
@@ -16,7 +17,7 @@ import com.google.protobuf.Timestamp
 import java.time.Instant
 import java.time.ZoneId
 
-fun Account.toDto(): AccountCredentialsDTO {
+fun Account.toCreateAccountDto(): AccountCredentialsDTO {
     return AccountCredentialsDTO(
         username = this.username,
         password = this.password
@@ -37,7 +38,7 @@ fun StatisticDTO.toDomain(): Statistic {
     )
 }
 
-fun Statistic.toDto(): StatisticDTO {
+fun Statistic.toCreateAccountDto(): StatisticDTO {
     return StatisticDTO(
         id = this.id,
         userId = this.userId,
@@ -97,12 +98,26 @@ fun Multimedia.Post.toDomain(): Post {
     )
 }
 
-fun User.toDto(): CreateAccountBodyDTO {
+fun User.toCreateAccountDto(): CreateAccountBodyDTO {
     return CreateAccountBodyDTO(
         username = this.account.username,
         password = this.account.password,
         email = this.email,
         name = this.name,
+        birthday = this.birthday,
+        description = this.description,
+        phone = this.phone,
+        website = this.website
+    )
+}
+
+fun User.toUpdateAccountDto(): UpdateUserBodyDTO {
+    return UpdateUserBodyDTO(
+        username = this.account.username,
+        email = this.email,
+        name = this.name,
+        active = this.active,
+        userType = if (this.role == UserRole.MEMBER) "Member" else "Moderator",
         birthday = this.birthday,
         description = this.description,
         phone = this.phone,

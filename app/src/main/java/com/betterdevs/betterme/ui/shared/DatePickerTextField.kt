@@ -36,10 +36,12 @@ fun DatePickerTextField(
     @StringRes label: Int,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
-    supportingText: @Composable (() -> Unit)? = null
+    supportingText: @Composable (() -> Unit)? = null,
+    initialValue: Instant? = null
 ) {
     var showDatePickerDialog by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
+    datePickerState.selectedDateMillis = initialValue?.toEpochMilli()
     val selectedDate = datePickerState.selectedDateMillis?.let {
         onDateSelected(Instant.ofEpochMilli(it))
         val localDate = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()

@@ -1,14 +1,10 @@
 package com.betterdevs.betterme.ui.create_account
 
 import android.app.Application
-import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.betterdevs.betterme.data.repository.UsersRepository
 import com.betterdevs.betterme.domain_model.Account
 import com.betterdevs.betterme.domain_model.User
@@ -17,7 +13,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.time.Instant
-import java.time.LocalDate
 
 data class CreateAccountState (
     val name: String = "",

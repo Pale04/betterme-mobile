@@ -11,6 +11,8 @@ import retrofit2.http.GET
 import com.betterdevs.betterme.BuildConfig
 import com.betterdevs.betterme.data.dto.CreateAccountBodyDTO
 import com.betterdevs.betterme.data.dto.CreateAccountResponseDTO
+import com.betterdevs.betterme.data.dto.UpdateUserBodyDTO
+import com.betterdevs.betterme.data.dto.UpdateUserEmailDTO
 import com.betterdevs.betterme.data.dto.UserDTO
 import com.google.gson.GsonBuilder
 import retrofit2.http.Path
@@ -19,6 +21,7 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializer
 import okhttp3.HttpUrl
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 
 interface UsersService {
@@ -27,6 +30,13 @@ interface UsersService {
 
     @POST("api/users")
     suspend fun addUser(@Body user: CreateAccountBodyDTO): Response<CreateAccountResponseDTO>
+
+    @PATCH("api/users/edit/{id}")
+    suspend fun updateUser(@Path("id") id: String, @Body user: UpdateUserBodyDTO): Response<CreateAccountResponseDTO>
+
+    @PATCH("api/users/{id}/email")
+    suspend fun updateUserEmail(@Path("id") id: String, @Body user: UpdateUserEmailDTO): Response<UpdateUserEmailDTO>
+
 
     companion object {
         fun create(context: Context): UsersService {

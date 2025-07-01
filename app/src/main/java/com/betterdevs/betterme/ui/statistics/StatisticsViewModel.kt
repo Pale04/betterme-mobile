@@ -139,7 +139,7 @@ class StatisticsViewModel(val context: Context, val category: StatisticCategory)
             val response = repository.getStatistics()
             if (response.success) {
                 if (!response.data.isNullOrEmpty()) {
-                    val lastStatistic = response.data.last()
+                    val lastStatistic = response.data.first()
                     if (lastStatistic.date.compareTo(LocalDate.now().atStartOfDay().toLocalDate()) == 0) {
                         when (category) {
                             StatisticCategory.ARMS -> categorySpecification.todayTrackingDone = lastStatistic.arms != null

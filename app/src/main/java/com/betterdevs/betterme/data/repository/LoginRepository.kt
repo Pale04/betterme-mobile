@@ -2,7 +2,7 @@ package com.betterdevs.betterme.data.repository
 
 import android.content.Context
 import com.betterdevs.betterme.data.data_source.LoginDataSource
-import com.betterdevs.betterme.data.shared.toDto
+import com.betterdevs.betterme.data.shared.toCreateAccountDto
 import com.betterdevs.betterme.domain_model.Account
 import com.betterdevs.betterme.domain_model.Response
 import org.json.JSONObject
@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets
 
 class LoginRepository (val context: Context, val dataSource: LoginDataSource = LoginDataSource(context)) {
     suspend fun login(account: Account): Response<String> {
-        val result = dataSource.login(account.toDto())
+        val result = dataSource.login(account.toCreateAccountDto())
         if (result.success) configUserSession(result.data?.accessToken ?: "")
         return Response(result.success, result.message, result.data?.accessToken ?: "")
     }
@@ -23,7 +23,7 @@ class LoginRepository (val context: Context, val dataSource: LoginDataSource = L
         val jsonString = String(decoded, StandardCharsets.UTF_8)
         val json = JSONObject(jsonString)
 
-        UserSession.setSession(json.getString("id"), json.getString("username"), json.getString("role"))
+        UserSession.setSession(json.getString("id"), json.getString("username"), json.getString("role"), json.getString("email"))
     }
 
 }

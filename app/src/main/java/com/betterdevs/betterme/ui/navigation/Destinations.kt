@@ -13,7 +13,9 @@ object Destinations {
         PostCreation,
         StatisticSelection,
         Statistics,
-        Profile
+        Profile,
+        EditProfile,
+        EditEmail
     )
 
     object Login : Destination {
@@ -51,6 +53,16 @@ object Destinations {
 
     object Profile : Destination {
         override val path = "Profile"
+        override val showBottomBar = true
+    }
+
+    object EditProfile : Destination {
+        override val path = "Profile/EditProfile"
+        override val showBottomBar = true
+    }
+
+    object EditEmail : Destination {
+        override val path = "Profile/EditProfile/Email"
         override val showBottomBar = true
     }
 }

@@ -14,6 +14,9 @@ import com.betterdevs.betterme.ui.statistics.StatisticSelectionScreen
 import com.betterdevs.betterme.ui.statistics.StatisticsScreen
 import com.betterdevs.betterme.ui.posts.PostsScreen
 import com.betterdevs.betterme.ui.posts.post_creation.PostCreationScreen
+import com.betterdevs.betterme.ui.profile.ProfileScreen
+import com.betterdevs.betterme.ui.profile.edit_profile.EditProfileScreen
+import com.betterdevs.betterme.ui.profile.edit_email.EditEmailScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -77,7 +80,25 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
             StatisticsScreen(category, modifier)
         }
         composable(Destinations.Profile.path) {
-
+            ProfileScreen(
+                onEditProfileClick = {
+                    navController.navigate(Destinations.EditProfile.path)
+                },
+                modifier = modifier
+            )
+        }
+        composable(Destinations.EditProfile.path) {
+            EditProfileScreen(
+                onChangeEmailClick = {
+                    navController.navigate(Destinations.EditEmail.path)
+                },
+                modifier = modifier
+            )
+        }
+        composable(Destinations.EditEmail.path) {
+            EditEmailScreen(
+                modifier = modifier
+            )
         }
     }
 }

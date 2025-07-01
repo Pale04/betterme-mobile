@@ -4,7 +4,7 @@ import android.content.Context
 import com.betterdevs.betterme.data.data_source.StatisticsDataSource
 import com.betterdevs.betterme.data.shared.UserSession
 import com.betterdevs.betterme.data.shared.toDomain
-import com.betterdevs.betterme.data.shared.toDto
+import com.betterdevs.betterme.data.shared.toCreateAccountDto
 import com.betterdevs.betterme.domain_model.Response
 import com.betterdevs.betterme.domain_model.Statistic
 import com.betterdevs.betterme.domain_model.StatisticCategory
@@ -25,7 +25,7 @@ class StatisticsRepository (val context: Context, val dataSource: StatisticsData
             StatisticCategory.WATER_INTAKE -> Statistic(waterIntake = value.toInt())
         }
 
-        val result = dataSource.saveStatistic(statistic.toDto())
+        val result = dataSource.saveStatistic(statistic.toCreateAccountDto())
         return Response(result.success, result.message, result.data)
     }
 }
