@@ -33,12 +33,12 @@ android {
             )
         }
         getByName("debug") {
-            buildConfigField("String", "SERVER_BASE_IP","\"172.20.10.5\"")
-            buildConfigField("int", "AUTHENTICATION_API_PORT", "6968")
-            buildConfigField("int", "HEALTH_STATS_API_PORT", "6973")
-            buildConfigField("int", "USERS_API_PORT", "6969")
-            buildConfigField("int", "MULTIMEDIA_API_PORT", "6979")
-            buildConfigField("int", "EMAIL_API_PORT", "6971")
+            buildConfigField("String", "SERVER_BASE_IP","\"172.20.10.6\"")
+            buildConfigField("int", "AUTHENTICATION_API_PORT", "6900")
+            buildConfigField("int", "HEALTH_STATS_API_PORT", "6900")
+            buildConfigField("int", "USERS_API_PORT", "6900")
+            buildConfigField("int", "MULTIMEDIA_API_PORT", "6900")
+            buildConfigField("int", "EMAIL_API_PORT", "6900")
         }
     }
 

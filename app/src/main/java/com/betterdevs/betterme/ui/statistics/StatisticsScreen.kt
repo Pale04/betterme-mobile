@@ -154,18 +154,12 @@ fun LineChart(points: List<Point>, measurementUnit: String, ySteps: Int, modifie
         }
         return
     }
-
-    var count = 0
+    
     val xAxisData = AxisData.Builder()
         .axisStepSize(( 340/(if (points.isNotEmpty()) points.size else 1) ).dp)
         .backgroundColor(Color.Transparent)
         .topPadding(16.dp)
         .steps(points.size - 1)
-        .labelData { _ ->
-            if (count in points.indices) generateChartDateLabel(points[count].x.toLong()) else ""
-
-            //if (i in 0..points.size) generateChartDateLabel(points[i].x.toLong()) else ""
-        }
         .labelAndAxisLinePadding(15.dp)
         .axisLineColor(Color(0xFF468585))
         .axisLabelColor(Color(0xFF468585))

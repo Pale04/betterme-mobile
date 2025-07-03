@@ -106,7 +106,7 @@ fun EditProfileScreen(
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
                 }
-                Tab(
+                /*Tab(
                     selected = state.selectedTab == 2,
                     onClick = { viewModel.onTabSelected(2) }
                 ) {
@@ -117,7 +117,7 @@ fun EditProfileScreen(
                         fontSize = 14.sp,
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
-                }
+                }*/
             }
 
             Column (
