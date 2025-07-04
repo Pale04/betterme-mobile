@@ -1,12 +1,15 @@
 package com.betterdevs.betterme.data.data_source
 
+import MultimediaService.Multimedia
 import MultimediaService.Multimedia.FileChunk
 import MultimediaService.Multimedia.Post
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
 import com.betterdevs.betterme.R
+import com.betterdevs.betterme.data.dto.PostDTO
 import com.betterdevs.betterme.data.service.MultimediaService
+import com.betterdevs.betterme.data.service.PostsService
 import com.betterdevs.betterme.domain_model.Response
 import com.google.protobuf.ByteString
 import io.grpc.StatusException
@@ -15,11 +18,68 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 import java.io.InputStream
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class PostDataSource(val context: Context) {
     private val multimediaService = MultimediaService()
+    private val postsService = PostsService.create(context)
+
+    suspend fun getPosts(category: String): Response<List<PostDTO>> {
+        val response: retrofit2.Response<List<PostDTO>>
+
+        try {
+            response = postsService.getPosts(category)
+        } catch (error: UnknownHostException) {
+            error.printStackTrace()
+            return Response(false, context.getString(R.string.general_no_internet_error))
+        } catch (error: SocketTimeoutException) {
+            error.printStackTrace()
+            return Response(false, context.getString(R.string.general_no_conection_error_text))
+        } catch (error: ConnectException) {
+            error.printStackTrace()
+            return Response(false, context.getString(R.string.general_no_conection_error_text))
+        } catch (error: Exception) {
+            error.printStackTrace()
+            return Response(false, context.getString(R.string.general_server_error))
+        }
+
+        return when (response.code()) {
+            200 -> Response(true, "Posts retrieved successfully", response.body())
+            else -> Response(false, context.getString(R.string.general_server_error))
+        }
+    }
+
+    suspend fun getPostMultimedia(postId: String): Response<ByteArray> {
+        val postInfo = Multimedia.PostInfo
+            .newBuilder()
+            .setId(postId)
+            .build()
+        val multimedia: ByteArray
+
+        try {
+            val flow = multimediaService.getPostMultimedia(postInfo)
+            val outputStream = ByteArrayOutputStream()
+            withContext(Dispatchers.IO) {
+                flow.collect { chunk ->
+                    outputStream.write(chunk.chunk.toByteArray())
+                }
+            }
+            multimedia = outputStream.toByteArray()
+        } catch (error: StatusException) {
+            error.printStackTrace()
+            return Response(false, "Error al obtener la multimedia")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Response(false, "Error al obtener la multimedia")
+        }
+
+        return Response(true, "Multimedia retrieved successfully", multimedia)
+    }
 
     suspend fun createPost(post: Post, multimediaUri: Uri? = null): Response<Post> {
         val response: Response<Post>

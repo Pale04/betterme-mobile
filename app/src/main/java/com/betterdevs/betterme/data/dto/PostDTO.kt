@@ -12,4 +12,5 @@ class PostDTO (
     val timeStamp: Instant = Instant.now(),
     val status: String = "",
     val multimediaExtension: String = "",
+    val mediaPath: String? = null
 )
