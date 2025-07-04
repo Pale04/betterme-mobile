@@ -33,7 +33,7 @@ android {
             )
         }
         getByName("debug") {
-            buildConfigField("String", "SERVER_BASE_IP","\"172.20.10.6\"")
+            buildConfigField("String", "SERVER_BASE_IP","\"172.20.10.7\"")
             buildConfigField("int", "AUTHENTICATION_API_PORT", "6900")
             buildConfigField("int", "HEALTH_STATS_API_PORT", "6900")
             buildConfigField("int", "USERS_API_PORT", "6900")
