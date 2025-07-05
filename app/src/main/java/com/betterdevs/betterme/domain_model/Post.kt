@@ -13,4 +13,8 @@ class Post (
     val timeStamp: Instant = Instant.now(),
     val status: PostStatus = PostStatus.PUBLISHED,
     val multimediaUri: Uri? = null,
+
+    val authorUsername: String = "",
+    val authorIsVerified: Boolean = false,
+    var multimedia: ByteArray? = null
 )

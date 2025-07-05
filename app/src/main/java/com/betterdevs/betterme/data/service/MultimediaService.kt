@@ -10,6 +10,7 @@ import io.grpc.ManagedChannelBuilder
 import kotlinx.coroutines.flow.Flow
 
 interface IMultimediaService {
+    suspend fun getPostMultimedia(postInfo: PostInfo): Flow<FileChunk>
     suspend fun createPost(post: Post): Post
     suspend fun uploadPostMultimedia(multimedia: Flow<FileChunk>): PostInfo
 }
@@ -21,6 +22,8 @@ class MultimediaService : IMultimediaService {
         .build()
 
     private val stub = MultimediaServiceCoroutineStub(channel).withWaitForReady()
+
+    override suspend fun getPostMultimedia(postInfo: PostInfo): Flow<FileChunk> = stub.getPostMultimedia(postInfo)
 
     override suspend fun createPost(post: Post): Post = stub.createPost(post)
 

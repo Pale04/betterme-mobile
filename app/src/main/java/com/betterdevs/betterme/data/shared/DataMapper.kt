@@ -3,6 +3,8 @@ package com.betterdevs.betterme.data.shared
 import MultimediaService.Multimedia
 import com.betterdevs.betterme.data.dto.AccountCredentialsDTO
 import com.betterdevs.betterme.data.dto.CreateAccountBodyDTO
+import com.betterdevs.betterme.data.dto.PostDTO
+import com.betterdevs.betterme.data.dto.ReportDTO
 import com.betterdevs.betterme.data.dto.StatisticDTO
 import com.betterdevs.betterme.data.dto.UpdateUserBodyDTO
 import com.betterdevs.betterme.data.dto.UserDTO
@@ -10,6 +12,7 @@ import com.betterdevs.betterme.domain_model.Account
 import com.betterdevs.betterme.domain_model.Post
 import com.betterdevs.betterme.domain_model.PostCategory
 import com.betterdevs.betterme.domain_model.PostStatus
+import com.betterdevs.betterme.domain_model.Report
 import com.betterdevs.betterme.domain_model.Statistic
 import com.betterdevs.betterme.domain_model.User
 import com.betterdevs.betterme.domain_model.UserRole
@@ -53,12 +56,6 @@ fun Statistic.toCreateAccountDto(): StatisticDTO {
 }
 
 fun Post.toProto(): Multimedia.Post {
-    val category = when (this.category) {
-        PostCategory.EATING -> "Alimentación"
-        PostCategory.HEALTH -> "Salud"
-        PostCategory.MEDICINE -> "Medicina"
-        PostCategory.EXERCISE -> "Ejercicio"
-    }
     val status = when (this.status) {
         PostStatus.PUBLISHED -> "Published"
         PostStatus.REPORTED -> "Reported"
@@ -67,7 +64,7 @@ fun Post.toProto(): Multimedia.Post {
     return Multimedia.Post.newBuilder()
         .setTitle(this.title)
         .setDescription(this.description)
-        .setCategory(category)
+        .setCategory(this.category.value())
         .setUserId(this.userId)
         .setTimeStamp(Timestamp.newBuilder().setSeconds(this.timeStamp.epochSecond))
         .setStatus(status)
@@ -141,5 +138,51 @@ fun UserDTO.toDomain(): User {
         verified = this.verified,
         active = this.account.active,
         role = if (this.account.userType.equals("Member", true)) UserRole.MEMBER else UserRole.MODERATOR
+    )
+}
+
+fun PostCategory.value(): String {
+    return when (this) {
+        PostCategory.EATING -> "Alimentación"
+        PostCategory.HEALTH -> "Salud"
+        PostCategory.MEDICINE -> "Medicina"
+        PostCategory.EXERCISE -> "Ejercicio"
+    }
+}
+
+fun PostDTO.toDomain(author: UserDTO? = null): Post {
+    return Post(
+        id = this.id,
+        title = this.title,
+        description = this.description,
+        category = when (this.category) {
+            "Alimentación" -> PostCategory.EATING
+            "Salud" -> PostCategory.HEALTH
+            "Medicina" -> PostCategory.MEDICINE
+            else -> PostCategory.EXERCISE
+        },
+        userId = this.userId,
+        timeStamp = this.timeStamp,
+        status = when (this.status) {
+            "Published" -> PostStatus.PUBLISHED
+            "Reported" -> PostStatus.REPORTED
+            else -> PostStatus.DELETED
+        },
+        authorUsername = author?.account?.username ?: "",
+        authorIsVerified = author?.verified ?: false
+    )
+}
+
+fun Report.toDto(): ReportDTO {
+    return ReportDTO(
+        postId = this.postId,
+        reason = this.reason
+    )
+}
+
+fun ReportDTO.toDomain(): Report {
+    return Report(
+        postId = this.postId,
+        reason = this.reason
     )
 }
